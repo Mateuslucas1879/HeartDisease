@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine Learning</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .results h2 {
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        .results ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .results li {
+            margin-bottom: 5px;
+            padding: 8px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .confusion-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .confusion-table th,
+        .confusion-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+        .confusion-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        input[type="file"],
+        input[type="number"],
+        select {
+            margin-bottom: 15px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        select {
+            appearance: none;
+        }
+        input[type="file"] {
+            border: none;
+        }
+        input[type="range"] {
+            margin-bottom: 5px;
+        }
+        .range-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .range-value {
+            font-size: 14px;
+            color: #555;
+        }
+        button {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Formulário de Previsão de Doenças Cardíacas</h1>
+        <form action="/train" method="post">
+            <label for="modelo">Escolha um Modelo:</label>
+            <select name="modelo" id="modelo" required>
+                <option value="">-- Escolha Opção --</option>
+                <option value="randomforest">Random Forest</option>
+                <option value="logisticregression">Regressão Logística</option>
+                <option value="kneighbors">KNeighbors Classifier</option>
+            </select>
+            <button type="submit">Treinar Modelo</button>
+            <br>
+        </form>
+
+        <form action="/predict" method="post">
+            <label for="idade">Idade:</label>
+            <input type="number" id="idade" name="idade" required>
+
+            <label for="sexo">Sexo:</label>
+            <select name="sexo" id="sexo" required>
+                <option value="">-- Selecione --</option>
+                <option value="0">Masculino</option>
+                <option value="1">Feminino</option>
+            </select>
+
+            <label for="dor_peito">Tipo de Dor no Peito:</label>
+            <select name="dor_peito" id="dor_peito" required>
+                <option value="">-- Selecione --</option>
+                <option value="1">Angina típica</option>
+                <option value="2">Angina atípica</option>
+                <option value="3">Dor não anginosa</option>
+                <option value="4">Assintomático</option>
+            </select>
+
+            <label for="pressao_repouso">Pressão Arterial em Repouso:</label>
+            <input type="number" id="pressao_repouso" name="pressao_repouso" required>
+
+            <label for="colesterol">Colesterol Sérico (mg/dl):</label>
+            <input type="number" id="colesterol" name="colesterol" required>
+
+            <label for="acucar_sangue">Açúcar no Sangue em Jejum (&gt;120 mg/dl):</label>
+            <select name="acucar_sangue" id="acucar_sangue" required>
+                <option value="">-- Selecione --</option>
+                <option value="0">Não</option>
+                <option value="1">Sim</option>
+            </select>
+
+            <label for="eletro_repouso">Resultados Eletrocardiográficos em Repouso:</label>
+            <select name="eletro_repouso" id="eletro_repouso" required>
+                <option value="">-- Selecione --</option>
+                <option value="0">Normal</option>
+                <option value="1">Anormalidade de ST-T</option>
+                <option value="2">Hipertrofia Ventricular Esquerda Provável ou Definitiva</option>
+            </select>
+
+            <label for="freq_card_max">Frequência Cardíaca Máxima Alcançada:</label>
+            <input type="number" id="freq_card_max" name="freq_card_max" required>
+
+            <label for="angina_induzida">Angina Induzida por Exercício:</label>
+            <select name="angina_induzida" id="angina_induzida" required>
+                <option value="">-- Selecione --</option>
+                <option value="0">Não</option>
+                <option value="1">Sim</option>
+            </select>
+
+            <label for="pico_antigo">Pico Antigo (Depressão do Segmento ST):</label>
+            <input type="number" id="pico_antigo" name="pico_antigo" required>
+
+            <label for="inclina_pico_st">Inclinação do Pico do Segmento ST do Exercício:</label>
+            <input type="number" id="inclina_pico_st" name="inclina_pico_st" required>
+
+            <label for="num_vasos_coloridos">Número de Vasos Principais Coloridos por Fluorosopia (0-3):</label>
+            <input type="number" id="num_vasos_coloridos" name="num_vasos_coloridos" min="0" max="3" required>
+
+            <label for="thal">Thalassemia:</label>
+            <input type="number" id="thal" name="thal" required>
+
+            <button type="submit">Prever</button>
+        </form>
+
+        {% if confusion_matrix %}
+        <div class="results">
+            <h2>Resultados do Treinamento</h2>
+            <p><strong>Matriz de Confusão:</strong></p>
+            <table class="confusion-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Previsto: Não Doente</th>
+                        <th>Previsto: Doente</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Verdadeiro: Não Doente</th>
+                        <td>{{ confusion_matrix[0][0] }}</td>
+                        <td>{{ confusion_matrix[0][1] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Verdadeiro: Doente</th>
+                        <td>{{ confusion_matrix[1][0] }}</td>
+                        <td>{{ confusion_matrix[1][1] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p><strong>Número de Acertos e Erros:</strong></p>
+            <p><strong>Acertos:</strong> {{ acertos }}</p>
+            <p><strong>Erros:</strong> {{ erros }}</p>
+        </div>
+        {% elif rmse %}
+        <div class="results">
+            <h2>Resultados do Treinamento</h2>
+            <p><strong>Número de Acertos e Erros:</strong></p>
+            <p><strong>Acertos:</strong> {{ acertos }}</p>
+            <p><strong>Erros:</strong> {{ erros }}</p>
+            <p><strong>RMSE:</strong> {{ rmse }}</p>
+        </div>
+        {% endif %}
+        <script>
+            // Atualizar os valores exibidos nas barras de rolagem
+            var taxaInput = document.getElementById("taxa");
+            var taxaValue = document.getElementById("taxa-value");
+            taxaInput.addEventListener("input", function() {
+                taxaValue.textContent = this.value;
+            });
+
+            var interaInput = document.getElementById("intera");
+            var interaValue = document.getElementById("intera-value");
+            interaInput.addEventListener("input", function() {
+                interaValue.textContent = this.value;
+            });
+        </script>
+    </div>
+</body>
+</html>

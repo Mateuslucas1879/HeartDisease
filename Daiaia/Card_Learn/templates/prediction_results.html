@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados da Previsão</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+        .results h2 {
+            margin-bottom: 10px;
+            color: #007bff;
+        }
+        .results ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .results li {
+            margin-bottom: 5px;
+            padding: 8px;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .confusion-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .confusion-table th,
+        .confusion-table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+        .confusion-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        .btn-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .btn {
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resultados da Previsão</h1>
+        <div class="results">
+            <h2>Resultado da Previsão</h2>
+            {% if user_prob is not none %}
+            <p><strong>Probabilidade de Ataque Cardíaco:</strong> {{ user_prob }}</p>
+            {% endif %}
+
+            <!-- Exibir RMSE se estiver disponível -->
+            {% if rmse is not none %}
+            <p><strong>RMSE:</strong> {{ rmse }}</p>
+            {% endif %}
+
+            <!-- Matriz de Confusão -->
+            {% if confusion_matrix %}
+            <p><strong>Matriz de Confusão:</strong></p>
+            <table class="confusion-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Previsto: Não Doente</th>
+                        <th>Previsto: Doente</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Verdadeiro: Não Doente</th>
+                        <td>{{ confusion_matrix[0][0] }}</td>
+                        <td>{{ confusion_matrix[0][1] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Verdadeiro: Doente</th>
+                        <td>{{ confusion_matrix[1][0] }}</td>
+                        <td>{{ confusion_matrix[1][1] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+        <div class="btn-container">
+            <a href="/" class="btn">Voltar ao Formulário</a>
+        </div>
+    </div>
+</body>
+</html>
