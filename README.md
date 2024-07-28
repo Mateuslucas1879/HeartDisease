@@ -20,7 +20,7 @@ A aplicação oferece um modelo interativo onde os usuários podem:
 
 O projeto utiliza um conjunto de dados sobre doenças cardíacas, com as seguintes características:
 - **age**: Idade do paciente
-- **sex**: Sexo do paciente (0 = feminino, 1 = masculino)
+- **sex**: Sexo do paciente (1 = feminino, 0 = masculino)
 - **cp**: Tipo de dor no peito (0 a 3)
 - **trestbps**: Pressão arterial em repouso (em mm Hg)
 - **chol**: Colesterol sérico (em mg/dl)
