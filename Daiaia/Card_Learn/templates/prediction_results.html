@@ -32,34 +32,54 @@
             background-color: #f8f9fa;
         }
         .results h2 {
+            margin-bottom: 15px;
+            color: #007bff;
+        }
+        .results p {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .results .result-value {
+            font-weight: bold;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+        .probability-section {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .probability-section h3 {
             margin-bottom: 10px;
             color: #007bff;
         }
-        .results ul {
-            list-style-type: none;
-            padding: 0;
+        .probability-section .probability {
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            padding: 10px;
         }
-        .results li {
-            margin-bottom: 5px;
-            padding: 8px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-        }
-        .confusion-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        .confusion-table th,
-        .confusion-table td {
-            padding: 8px;
+        .probability-section .probability .label {
+            width: 48%;
             text-align: center;
-            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
         }
-        .confusion-table th {
-            background-color: #f8f9fa;
+        .probability-section .probability .positive {
+            background-color: #28a745;
+            color: #ffffff;
+        }
+        .probability-section .probability .negative {
+            background-color: #dc3545;
+            color: #ffffff;
+        }
+        .rmse {
+            font-size: 20px;
             font-weight: bold;
+            margin-top: 15px;
         }
         .btn-container {
             text-align: center;
@@ -84,39 +104,28 @@
         <h1>Resultados da Previsão</h1>
         <div class="results">
             <h2>Resultado da Previsão</h2>
-            {% if user_prob is not none %}
-            <p><strong>Probabilidade de Ataque Cardíaco:</strong> {{ user_prob }}</p>
+
+            {% if model_type == 'logisticregression' %}
+                <div class="probability-section">
+                    <h3>Probabilidade de Ataque Cardíaco</h3>
+                    <div class="probability">
+                        <div class="label negative">
+                            Não Ter Ataque Cardíaco: {{ user_prob[0] | round(2) }}
+                        </div>
+                        <div class="label positive">
+                            Ter Ataque Cardíaco: {{ user_prob[1] | round(2) }}
+                        </div>
+                    </div>
+                    <p>A probabilidade de que o paciente não tenha um ataque cardíaco é de {{ user_prob[0] | round(2) }}.</p>
+                    <p>A probabilidade de que o paciente tenha um ataque cardíaco é de {{ user_prob[1] | round(2) }}.</p>
+                </div>
+            {% else %}
+                <p><strong>Classificação:</strong> {{ 'Tem Ataque Cardíaco' if user_prob[0] == 1 else 'Não Tem Ataque Cardíaco' }}</p>
             {% endif %}
 
-            <!-- Exibir RMSE se estiver disponível -->
-            {% if rmse is not none %}
-            <p><strong>RMSE:</strong> {{ rmse }}</p>
-            {% endif %}
-
-            <!-- Matriz de Confusão -->
-            {% if confusion_matrix %}
-            <p><strong>Matriz de Confusão:</strong></p>
-            <table class="confusion-table">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>Previsto: Não Doente</th>
-                        <th>Previsto: Doente</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <th>Verdadeiro: Não Doente</th>
-                        <td>{{ confusion_matrix[0][0] }}</td>
-                        <td>{{ confusion_matrix[0][1] }}</td>
-                    </tr>
-                    <tr>
-                        <th>Verdadeiro: Doente</th>
-                        <td>{{ confusion_matrix[1][0] }}</td>
-                        <td>{{ confusion_matrix[1][1] }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <!-- Exibir RMSE se estiver disponível e não for 'N/A' -->
+            {% if rmse != 'N/A' %}
+            <p class="rmse"><strong>RMSE:</strong> {{ rmse | round(2) }}</p>
             {% endif %}
         </div>
         <div class="btn-container">

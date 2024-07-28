@@ -14,15 +14,18 @@ app = Flask(__name__)
 # Carregar a base de dados
 df = pd.read_csv('heart-disease.csv')
 
+
 # Pré-processar dados
 def preprocess_data(df):
     df_encoded = pd.get_dummies(df, columns=['cp', 'restecg'])
     return df_encoded
 
+
 df = preprocess_data(df)
 
 # Escalonador global para consistência entre treinamento e predição
 scaler = StandardScaler()
+
 
 def train_model(modelo):
     try:
@@ -73,6 +76,7 @@ def train_model(modelo):
         traceback.print_exc()  # Imprime o rastro de pilha da exceção
         return None, None, None, None, None, None, None, "Ocorreu um erro ao processar a sua solicitação. Por favor, tente novamente."
 
+
 @app.route('/')
 def home():
     confusion_matrix = app.config.get('confusion_matrix')
@@ -81,7 +85,9 @@ def home():
     accuracy = app.config.get('accuracy')
     rmse = app.config.get('rmse')
     classification_rep = app.config.get('classification_rep')
-    return render_template('index.html', confusion_matrix=confusion_matrix, acertos=acertos, erros=erros, accuracy=accuracy, rmse=rmse, classification_rep=classification_rep)
+    return render_template('index.html', confusion_matrix=confusion_matrix, acertos=acertos, erros=erros,
+                           accuracy=accuracy, rmse=rmse, classification_rep=classification_rep)
+
 
 @app.route('/train', methods=['POST'])
 def train():
@@ -94,6 +100,7 @@ def train():
 
         # Salvar o modelo treinado e resultados
         app.config['model'] = model
+        app.config['model_type'] = modelo  # Adicione essa linha para armazenar o tipo de modelo
         app.config['confusion_matrix'] = confusion_matrix_result
         app.config['acertos'] = acertos
         app.config['erros'] = erros
@@ -106,10 +113,13 @@ def train():
         traceback.print_exc()  # Imprime o rastro de pilha da exceção
         return "Ocorreu um erro ao processar a sua solicitação. Por favor, tente novamente."
 
+
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
         model = app.config.get('model')
+        model_type = app.config.get('model_type')  # Adicione essa linha para armazenar o tipo de modelo
+
         if model is None:
             return "Modelo não treinado. Por favor, treine o modelo antes de fazer previsões."
 
@@ -148,21 +158,27 @@ def predict():
         user_data = pd.DataFrame(data)
 
         # Escalonar os dados do usuário
-        user_data = scaler.transform(user_data)
+        user_data_scaled = scaler.transform(user_data)
 
-        # Prever a probabilidade de ataque cardíaco
-        user_prob = model.predict(user_data)  # Previsão da classe
+        # Prever o resultado
+        if model_type == 'logisticregression':
+            user_prob = model.predict_proba(user_data_scaled)[0]  # Probabilidades de cada classe
+        else:
+            user_prob = [model.predict(user_data_scaled)[0]]  # Previsão da classe
 
-        return render_template('prediction_results.html', user_prob=user_prob[0])
+        # Atribuir valor 'None' para rmse se não estiver disponível
+        rmse = app.config.get('rmse')
+        if rmse is None:
+            rmse = 'N/A'
+
+        return render_template('prediction_results.html', user_prob=user_prob, model_type=model_type, rmse=rmse)
 
     except Exception as e:
         traceback.print_exc()  # Imprime o rastro de pilha da exceção
         return "Ocorreu um erro ao processar a sua solicitação. Por favor, tente novamente."
 
+
 if __name__ == '__main__':
     debug_mode = os.getenv('FLASK_DEBUG', 'False') == 'True'
     app.run(debug=True)
-
-
-
 
