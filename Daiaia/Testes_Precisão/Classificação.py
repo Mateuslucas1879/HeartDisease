@@ -1,9 +1,13 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
+import warnings
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, classification_report, roc_auc_score
 from sklearn.preprocessing import StandardScaler
+
+# Ignorar avisos
+warnings.filterwarnings('ignore')
 
 # Carregar a base de dados
 df = pd.read_csv('heart-disease.csv')
@@ -38,6 +42,15 @@ def train_and_evaluate_model(modelo):
             print("Modelo inválido. Por favor, escolha 'kneighbors' ou 'randomforest'.")
             return
 
+        # Validação cruzada k-fold
+        k = 5
+        scores = cross_val_score(model, X_train, y_train, cv=k, scoring='roc_auc')
+        print(f"\n{'='*40}\nValidação cruzada (k={k})\n{'='*40}")
+        for i, score in enumerate(scores, 1):
+            print(f"Fold {i}: AUC = {score:.4f}")
+        print(f"\nMédia AUC Score: {scores.mean():.4f} ± {scores.std():.4f}\n{'='*40}")
+
+        # Treinar o modelo com todos os dados de treino
         model.fit(X_train, y_train)
 
         # Fazer previsões
@@ -55,19 +68,20 @@ def train_and_evaluate_model(modelo):
         total_predicoes = len(y_test)  # Número total de predições
 
         # Imprimir predições e resultados
-        print(f"\nResultados para o modelo: {modelo}")
+        print(f"\n{'='*40}\nResultados para o modelo: {modelo}\n{'='*40}")
         print("Predições dos Pacientes:")
         for i in range(len(y_test)):
-            print(f"Paciente {i+1}: Verdadeiro = {y_test.iloc[i]}, Predito = {y_pred[i]}, Probabilidade = {y_prob[i]:.4f}")
+            print(f"Paciente {i+1:3d}: Verdadeiro = {y_test.iloc[i]}, Predito = {y_pred[i]}, Probabilidade = {y_prob[i]:.4f}")
 
-        print(f"\nNúmero de Acertos: {acertos}")
+        print(f"\n{'='*40}\nNúmero de Acertos: {acertos}")
         print(f"Número de Erros: {erros}")
         print(f"Matriz de Confusão: {confusion_matrix_result}")
         print(f"Total de Predições: {total_predicoes}")
-        print(f"AUC: {auc_score:.4f}")
+        print(f"AUC: {auc_score:.4f}\n{'='*40}")
 
         print("\nRelatório de Classificação:")
         print(class_report)
+        print(f"{'='*40}")
 
         return model, confusion_matrix_result, acertos, erros, auc_score, total_predicoes
 
