@@ -118,7 +118,7 @@ def train():
 def predict():
     try:
         model = app.config.get('model')
-        model_type = app.config.get('model_type')  # Adicione essa linha para armazenar o tipo de modelo
+        model_type = app.config.get('model_type')
 
         if model is None:
             return "Modelo não treinado. Por favor, treine o modelo antes de fazer previsões."
@@ -139,10 +139,24 @@ def predict():
         }
 
         # Incluir codificação one-hot para as variáveis categóricas
-        cp = [0, 0, 0, 0]
-        cp[int(request.form['dor_peito'])] = 1
-        restecg = [0, 0, 0]
-        restecg[int(request.form['eletro_repouso'])] = 1
+        cp = [0, 0, 0, 0]  # Ajuste para 4 categorias
+        restecg = [0, 0, 0]  # Mantém como 3 categorias
+
+        try:
+            cp_index = int(request.form['dor_peito'])
+            if 1 <= cp_index <= len(cp):
+                cp[cp_index - 1] = 1  # Ajuste para indexar corretamente
+            else:
+                return "Valor inválido para 'dor_peito'. Deve estar entre 1 e 4."
+
+            restecg_index = int(request.form['eletro_repouso'])
+            if 0 <= restecg_index < len(restecg):
+                restecg[restecg_index] = 1
+            else:
+                return "Valor inválido para 'eletro_repouso'. Deve estar entre 0 e 2."
+
+        except ValueError:
+            return "Valor inválido enviado para o formulário."
 
         data.update({
             'cp_0': cp[0],
@@ -176,6 +190,7 @@ def predict():
     except Exception as e:
         traceback.print_exc()  # Imprime o rastro de pilha da exceção
         return "Ocorreu um erro ao processar a sua solicitação. Por favor, tente novamente."
+
 
 
 if __name__ == '__main__':

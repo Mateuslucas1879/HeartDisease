@@ -116,11 +116,11 @@
                             Ter Ataque Cardíaco: {{ user_prob[1] | round(2) }}
                         </div>
                     </div>
-                    <p>A probabilidade de que o paciente tenha baixo risco de possuir doença cardíaca é de {{ user_prob[0] | round(2) }}.</p>
-                    <p>A probabilidade de que o paciente tenha alto risco de possuir doença cardíaca é de {{ user_prob[1] | round(2) }}.</p>
+                    <p>A probabilidade de que o paciente não tenha um ataque cardíaco é de {{ user_prob[0] | round(2) }}.</p>
+                    <p>A probabilidade de que o paciente tenha um ataque cardíaco é de {{ user_prob[1] | round(2) }}.</p>
                 </div>
             {% else %}
-                <p><strong>Classificação:</strong> {{ 'Paciente com alto risco de possuir doença cardíaca' if user_prob[0] == 1 else ''Paciente com baixo risco de possuir doença cardíaca' }}</p>
+                <p><strong>Classificação:</strong> {{ 'Tem Ataque Cardíaco' if user_prob[0] == 1 else 'Não Tem Ataque Cardíaco' }}</p>
             {% endif %}
 
             <!-- Exibir RMSE se estiver disponível e não for 'N/A' -->
