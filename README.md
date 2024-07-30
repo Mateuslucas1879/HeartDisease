@@ -1,6 +1,6 @@
 # Heart Disease Prediction
 
-![Heart Disease Prediction](https://img.shields.io/badge/Flask-1.1.2-blue) ![Python](https://img.shields.io/badge/Python-3.8%2B-yellow) ![License](https://img.shields.io/badge/License-MIT-green)
+![Heart Disease Prediction](https://img.shields.io/badge/Flask-1.1.2-blue) ![Python](https://img.shields.io/badge/Python-3.12%2B-yellow) ![License](https://img.shields.io/badge/License-MIT-green)
 
 ## 📝 Sobre o Projeto
 
