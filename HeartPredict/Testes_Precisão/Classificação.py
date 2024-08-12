@@ -83,6 +83,13 @@ def train_and_evaluate_model(modelo):
         print(class_report)
         print(f"{'='*40}")
 
+        # === RESULTADO FINAL ===
+        contATotal = acertos
+        print("=== RESULTADO FINAL ===")
+        print("Dos 61 pacientes da base...")
+        perc = round(contATotal * 100 / 61, 1)
+        print(f"O modelo acertou a previsão de {contATotal} ({perc}% de acerto)")
+
         return model, confusion_matrix_result, acertos, erros, auc_score, total_predicoes
 
     except ValueError as ve:
@@ -95,3 +102,4 @@ def train_and_evaluate_model(modelo):
 modelos = ['kneighbors', 'randomforest']
 for modelo in modelos:
     train_and_evaluate_model(modelo)
+

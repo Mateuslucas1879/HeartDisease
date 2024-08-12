@@ -78,6 +78,13 @@ def train_and_evaluate_logistic_regression():
         print(class_report)
         print(f"{'='*40}")
 
+        # === RESULTADO FINAL ===
+        contATotal = acertos
+        print("=== RESULTADO FINAL ===")
+        print("Dos 61 pacientes da base...")
+        perc = round(contATotal * 100 / 61, 1)
+        print(f"O modelo acertou a previsão de {contATotal} ({perc}% de acerto)")
+
     except ValueError as ve:
         print(f"Erro de Valor: {str(ve)}")
     except Exception as e:
@@ -86,3 +93,4 @@ def train_and_evaluate_logistic_regression():
 
 # Avaliar o modelo de Regressão Logística
 train_and_evaluate_logistic_regression()
+
