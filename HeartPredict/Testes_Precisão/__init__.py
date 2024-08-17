@@ -5,7 +5,6 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix, mean_squared_error, classification_report
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, roc_curve
 from sklearn.preprocessing import StandardScaler
 import os
 import traceback
@@ -55,11 +54,7 @@ def train_model(modelo):
         y_pred = model.predict(X_test)
 
         # Calcular métricas
-        accuracy = accuracy_score(y_test, y_pred)
-        precision = precision_score(y_test, y_pred)
-        recall = recall_score(y_test, y_pred)
-        f1 = f1_score(y_test, y_pred)
-        auc_roc = roc_auc_score(y_test, model.predict_proba(X_test)[:, 1])
+        accuracy = (y_pred == y_test).mean()
         classification_rep = classification_report(y_test, y_pred, target_names=["Não Doente", "Doente"])
 
         if modelo == 'logisticregression':
@@ -73,7 +68,7 @@ def train_model(modelo):
         acertos = sum(y_test == y_pred)
         erros = len(y_test) - acertos
 
-        return model, confusion_matrix_result, acertos, erros,  accuracy, precision, recall, f1, auc_roc,rmse, classification_rep, None
+        return model, confusion_matrix_result, acertos, erros, accuracy, rmse, classification_rep, None
 
     except ValueError as ve:
         return None, None, None, None, None, None, None, f"Erro de Valor: {str(ve)}"
@@ -88,22 +83,18 @@ def home():
     acertos = app.config.get('acertos')
     erros = app.config.get('erros')
     accuracy = app.config.get('accuracy')
-    precision = app.config.get('precision')
-    recall = app.config.get('recall')
-    f1 = app.config.get('f1')
-    auc_roc = app.config.get('auc_roc')
     rmse = app.config.get('rmse')
     classification_rep = app.config.get('classification_rep')
     return render_template('index.html', confusion_matrix=confusion_matrix, acertos=acertos, erros=erros,
-                           accuracy=accuracy, precision=precision, recall=recall, f1=f1, auc_roc=auc_roc, rmse=rmse,
-                           classification_rep=classification_rep)
+                           accuracy=accuracy, rmse=rmse, classification_rep=classification_rep)
 
 
 @app.route('/train', methods=['POST'])
 def train():
     try:
         modelo = request.form['modelo'].lower()
-        model, confusion_matrix_result, acertos, erros, accuracy, precision, recall, f1, auc_roc, classification_rep, rmse, error_message = train_model(modelo)
+        model, confusion_matrix_result, acertos, erros, accuracy, rmse, classification_rep, error_message = train_model(modelo)
+
         if error_message:
             return error_message
 
@@ -114,14 +105,10 @@ def train():
         app.config['acertos'] = acertos
         app.config['erros'] = erros
         app.config['accuracy'] = accuracy
-        app.config['precision'] = precision
-        app.config['recall'] = recall
-        app.config['f1'] = f1
-        app.config['auc_roc'] = auc_roc
         app.config['rmse'] = rmse
         app.config['classification_rep'] = classification_rep
 
-        return render_template('index.html', confusion_matrix=confusion_matrix_result, acertos=acertos, erros=erros, accuracy=accuracy, precision=precision, recall=recall, f1=f1, auc_roc=auc_roc, rmse=rmse, classification_rep=classification_rep)
+        return render_template('index.html', confusion_matrix=confusion_matrix_result, acertos=acertos, erros=erros, accuracy=accuracy, rmse=rmse, classification_rep=classification_rep)
     except Exception as e:
         traceback.print_exc()  # Imprime o rastro de pilha da exceção
         return "Ocorreu um erro ao processar a sua solicitação. Por favor, tente novamente."

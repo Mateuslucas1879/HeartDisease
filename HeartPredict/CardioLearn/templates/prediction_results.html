@@ -110,23 +110,20 @@
                     <h3>Probabilidade de Ataque Cardíaco</h3>
                     <div class="probability">
                         <div class="label negative">
-                            Não Ter Ataque Cardíaco: {{ user_prob[0] | round(2) }}
+                             Risco Baixo de Ataque Cardíaco: {{ user_prob[0] | round(2) }}
                         </div>
                         <div class="label positive">
-                            Ter Ataque Cardíaco: {{ user_prob[1] | round(2) }}
+                            Risco Elevado de Ataque Cardíaco: {{ user_prob[1] | round(2) }}
                         </div>
                     </div>
                     <p>A probabilidade de que o paciente não tenha um ataque cardíaco é de {{ user_prob[0] | round(2) }}.</p>
                     <p>A probabilidade de que o paciente tenha um ataque cardíaco é de {{ user_prob[1] | round(2) }}.</p>
                 </div>
             {% else %}
-                <p><strong>Classificação:</strong> {{ 'Tem Ataque Cardíaco' if user_prob[0] == 1 else 'Não Tem Ataque Cardíaco' }}</p>
+                <p><strong>Classificação:</strong> {{ 'Risco Elevado de Ataque Cardíaco' if user_prob[0] == 1 else 'Risco Baixo de Ataque Cardíaco' }}</p>
             {% endif %}
 
-            <!-- Exibir RMSE se estiver disponível e não for 'N/A' -->
-            {% if rmse != 'N/A' %}
-            <p class="rmse"><strong>RMSE:</strong> {{ rmse | round(2) }}</p>
-            {% endif %}
+
         </div>
         <div class="btn-container">
             <a href="/" class="btn">Voltar ao Formulário</a>
