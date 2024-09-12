@@ -11,7 +11,7 @@ O **Heart Disease Prediction** é uma aplicação web que utiliza técnicas de a
 A aplicação oferece um modelo interativo onde os usuários podem:
 - Treinar modelos de aprendizado de máquina com diferentes algoritmos.
 - Inserir dados pessoais para prever o risco de um ataque cardíaco.
-- Obter métricas de avaliação do modelo, como precisão e RMSE.
+- Obter métricas de avaliação do modelo, como precisão, sensibilidade.
 - Visualizar a matriz de confusão para análise de desempenho do modelo.
 
 ## 📊 Detalhes do Projeto
