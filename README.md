@@ -52,7 +52,7 @@ O projeto suporta três tipos de modelos:
 O treinamento é realizado com as seguintes etapas:
 - **Divisão dos Dados**: Os dados são divididos em conjuntos de treinamento e teste (80% treino, 20% teste).
 - **Treinamento**: O modelo é treinado com os dados de treinamento e avaliado com os dados de teste.
-- **Métricas**: São calculadas a precisão do modelo, RMSE (para regressão) e a matriz de confusão (para classificação).
+- **Métricas**: São calculadas a precisão do modelo e a matriz de confusão (para classificação).
 
 ### 5. **Previsão**
 
