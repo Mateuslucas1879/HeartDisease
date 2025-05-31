@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/HeartPredict" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/HeartPredict/CardioLearn" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/HeartPredict/CardioLearn/templates" vcs="Git" />
   </component>
 </project>

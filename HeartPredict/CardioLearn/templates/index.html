@@ -221,23 +221,23 @@
             <table>
                 <tr>
                     <td><strong>Acurácia:</strong></td>
-                    <td>{{ accuracy }}</td>
+                    <td>{{ accuracy | round(4) }}</td>
                 </tr>
                 <tr>
                     <td><strong>Precisão:</strong></td>
-                    <td>{{ precision }}</td>
+                    <td>{{ precision | round(4) }}</td>
                 </tr>
                 <tr>
                     <td><strong>Recall:</strong></td>
-                    <td>{{ recall }}</td>
+                    <td>{{ recall | round(4) }}</td>
                 </tr>
                 <tr>
                     <td><strong>F1-Score:</strong></td>
-                    <td>{{ f1 }}</td>
+                    <td>{{ f1 | round(4) }}</td>
                 </tr>
                 <tr>
                     <td><strong>AUC-ROC:</strong></td>
-                    <td>{{ auc_roc }}</td>
+                    <td>{{ auc_roc | round(4) }}</td>
                 </tr>
             </table>
         </div>

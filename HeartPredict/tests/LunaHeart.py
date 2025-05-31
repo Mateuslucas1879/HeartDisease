@@ -37,8 +37,8 @@ def test_predict(client):
     client.post('/train', data={'modelo': 'randomforest'})
 
     response = client.post('/predict', data={
-        'idade': '45',
-        'sexo': 'masculino',
+        'idade': '24',
+        'sexo': 'feminino',
         'pressao_repouso': '120',
         'colesterol': '200',
         'acucar_sangue': 'falso',

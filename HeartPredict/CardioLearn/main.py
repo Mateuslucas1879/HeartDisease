@@ -24,10 +24,10 @@ def preprocess_data(df):
 
 df = preprocess_data(df)
 
-# Escalonador global para consistência entre treinamento e predição
+# Escalonador global
 scaler = StandardScaler()
 
-
+# Função
 def train_model(modelo):
     try:
         # Dados para treino do modelo
@@ -49,7 +49,7 @@ def train_model(modelo):
         elif modelo == "kneighbors":
             model = KNeighborsClassifier()
         else:
-            return None, None, None, None, None, None, None, "Modelo inválido. Por favor, escolha 'randomforest', 'logisticregression' ou 'kneighbors'."
+            return None, None, None, None, None, None, None, None, None, None, None, "Modelo inválido. Por favor, escolha 'randomforest', 'logisticregression' ou 'kneighbors'."
 
         model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
@@ -63,7 +63,7 @@ def train_model(modelo):
         classification_rep = classification_report(y_test, y_pred, target_names=["Não Doente", "Doente"])
 
         if modelo == 'logisticregression':
-            rmse = mean_squared_error(y_test, y_pred, squared=False)
+            rmse = mean_squared_error(y_test, y_pred)
             confusion_matrix_result = None  # Deixar a matriz de confusão em branco
         else:
             rmse = None
@@ -76,10 +76,10 @@ def train_model(modelo):
         return model, confusion_matrix_result, acertos, erros,  accuracy, precision, recall, f1, auc_roc,rmse, classification_rep, None
 
     except ValueError as ve:
-        return None, None, None, None, None, None, None, f"Erro de Valor: {str(ve)}"
+        return None, None, None, None, None, None, None, None, None, None, None, f"Erro de Valor: {str(ve)}"
     except Exception as e:
-        traceback.print_exc()  # Imprime o rastro de pilha da exceção
-        return None, None, None, None, None, None, None, "Ocorreu um erro ao processar a sua solicitação. Por favor, tente novamente."
+        traceback.print_exc()
+        return None, None, None, None, None, None, None, None, None, None, None, "Ocorreu um erro ao processar a sua solicitação. Por favor, tente novamente."
 
 
 @app.route('/')
@@ -151,7 +151,7 @@ def predict():
             'thal': [int(request.form['thal'])]
         }
 
-        # Incluir codificação one-hot para as variáveis categóricas
+        # Incluir codificação onehot para as variáveis categóricas
         cp = [0, 0, 0, 0]  # Ajuste para 4 categorias
         restecg = [0, 0, 0]  # Mantém como 3 categorias
 
